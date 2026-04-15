@@ -1,4 +1,4 @@
-package dev._xdbe.booking.creelhouse.infrastructure.config;
+package dev._xdbe.booking.creelhouse.infrastructure.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,12 +29,16 @@ public class SecurityConfiguration {
                 // Step 4a: add access control
                 // ...
                 // Step 4a: end
-                .anyRequest().permitAll()
+                .requestMatchers("/dashboard").hasRole("ADMIN")
+                .requestMatchers("/booking/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated()
             )
             // Step 4b: Add login form
             // ...
             // Step 4b: End of login form configuration
-            
+            .formLogin(withDefaults())
+            .logout(withDefaults())
             .csrf((csrf) -> csrf
                 .ignoringRequestMatchers("/h2-console/**")
             )
@@ -49,5 +53,21 @@ public class SecurityConfiguration {
     // Step 3: add InMemoryUserDetailsManager
     // ...
     // Step 3: end
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("{bcrypt}$2a$10$JAbC0waCOrsOPb4c4AprEOz6rbpB2OniQRBf.7eyVk/x4Q9z6QDh2")
+                .roles("ADMIN")
+                .build();
+
+        UserDetails guest = User.builder()
+                .username("guest")
+                .password("{bcrypt}$2a$10$SBmVF/qE/nHxYJhQ2MDi1ehVYdxAMAyVZhmM49dg0eO6CyYyoQ0vy")
+                .roles("GUEST")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin, guest);
+    }
 
 }
