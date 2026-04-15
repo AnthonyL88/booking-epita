@@ -28,7 +28,7 @@ spring:
 server:
   port: 8443
   ssl:
-    enabled: true
+    bundle: web
   # Step 1b: Enable SSL and specify ssl bundle
   # ...
   # Step 1b: End of SSL configuration
