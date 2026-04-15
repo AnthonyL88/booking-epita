@@ -38,7 +38,13 @@ public class CreditCardConverter implements AttributeConverter<String, String> {
 
     private String panMasking(String pan) {
         // Step 6:
-        return pan;
+
+        String start = pan.substring(0, 4);
+        String end = pan.substring(pan.length() - 4);
+
+        return start +
+                "*".repeat(Math.max(0, pan.length() - 8)) +
+                end;
         // Step 6: End
     }
 
