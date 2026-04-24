@@ -35,11 +35,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Semgrep
-        run: semgrep scan --sarif -output=khara.sarif --config=.semgrep
+        run: semgrep scan --sarif --output khara.sarif --config .semgrep
 
       - name: Upload Semgrep
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: khara.sarif
-        if: always()
+        
 
